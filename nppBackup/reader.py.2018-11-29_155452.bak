@@ -62,7 +62,7 @@ class multigroup_library:
             mts = [mts]
         sigmas = []
         for mt in mts:
-            sigmas.append(self.nuclides[id].xs[0][mt])
+            sigmas.append(self.nuclides[id].xs[mt][0])
         if len(sigmas) == 1:
             return sigmas[0]
         else:

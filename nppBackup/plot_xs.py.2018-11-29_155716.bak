@@ -47,7 +47,7 @@ ax = fig.add_subplot(111)
 ax.grid(which='both', linestyle="-", color="0.95")
 ax.set_axisbelow(True)
 
-for i in range(0, len(values)):
+for i in range(0, n):
     ax.step(energy, values[i], lw=2, label="data set "+repr(i), color=repr((0.5*float((i+1)/n))), where='pre', linewidth=1)
 if (n>1):
     ax.legend(loc='lower left')

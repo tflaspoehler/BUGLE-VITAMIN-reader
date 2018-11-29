@@ -57,18 +57,6 @@ class multigroup_library:
                     self.nuclides[nuclide].add_legendre(lines[start:finish+1])
                 start = l
                 break
-    def get_mt(self, id, mts=[1]):
-        if not isinstance(mts, list):
-            mts = [mts]
-        sigmas = []
-        for mt in mts:
-            sigmas.append(self.nuclides[id].xs[0][mt])
-        if len(sigmas) == 1:
-            return sigmas[0]
-        else:
-            return sigmas
-            
-        
 ## =========================================   
 
 ## =========================================   

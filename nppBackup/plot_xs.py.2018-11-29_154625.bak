@@ -12,17 +12,14 @@ except:
 book = multigroup_library(file_name)
 energy = np.array([float(b.replace('\n','').replace('\r','')) for b in open('neutron_groups.dat').readlines()])
 n = len(energy) - 1
-## values = book.nuclides[4725].xs[0][0][:n]
-values = book.get_mt(4725, [1,2,3,4])
-for i in range(0, len(values)):
-    values[i] = [values[i][0]] + values[i][:n]
-    values[i] = np.array(values[i])
-
+values = np.array(book.nuclides[4725].xs[0][0][:n])
+print len(energy), len(values)
 print energy
-print values[0]
-print values[1]
-print values[2]
-print values[3]
+print values
+values = [values[0]] + values
+print len(energy), len(values)
+print energy
+print values
 
 def get_ticks(mini,maxi):
     if mini == 0:
@@ -47,7 +44,7 @@ ax = fig.add_subplot(111)
 ax.grid(which='both', linestyle="-", color="0.95")
 ax.set_axisbelow(True)
 
-for i in range(0, len(values)):
+for i in range(0, n):
     ax.step(energy, values[i], lw=2, label="data set "+repr(i), color=repr((0.5*float((i+1)/n))), where='pre', linewidth=1)
 if (n>1):
     ax.legend(loc='lower left')

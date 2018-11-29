@@ -58,11 +58,11 @@ class multigroup_library:
                 start = l
                 break
     def get_mt(self, id, mts=[1]):
-        if not isinstance(mts, list):
+        if isdigit(mts):
             mts = [mts]
         sigmas = []
         for mt in mts:
-            sigmas.append(self.nuclides[id].xs[0][mt])
+            sigmas.append(self.nuclides[id][mt][0])
         if len(sigmas) == 1:
             return sigmas[0]
         else:
