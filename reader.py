@@ -10,13 +10,18 @@ class isotope:
     def __init__(self, lines):
         title = lines[0]
         self.id = int(title.split()[3])
-        self.name = title.split()[5]
+        self.name = ' '.join(title.split()[5:])
         self.n_groups = int(title.split()[0])
+        self.n_neutrons = 47
+        self.n_gammas = 20
         self.n_responses = int(title.split()[1])
         self.xs = []
-        self.add_legendre(lines)
+        if self.id < 7000:
+            self.read_data(lines)
+        else:
+            self.read_data(lines)
         
-    def add_legendre(self, lines):
+    def read_data(self, lines):
         data = []
         for line in lines[1:]:
             values = line.split()[:-1]
@@ -27,11 +32,47 @@ class isotope:
                         data.append(convert_ascii_number(''+fido[1]))
                 else:
                     data.append(convert_ascii_number(values[v]))
-        next = []
-        for r in range(0, self.n_responses):
-            next.append([response for response in data[:self.n_groups]])
-            data[:self.n_groups] = []
-        self.xs.append(next)
+        if self.id < 7000:
+            siga = []
+            nsgf = []
+            sigt = []
+            sigs = []
+            for g in range(0, self.n_groups):
+                siga.append(data[0])
+                nsgf.append(data[1])
+                sigt.append(data[2])
+                data[:3] = []
+                sigs.append([response for response in data[:self.n_groups+4]])
+                data[:self.n_groups+4] = []
+            self.xs.append([siga, nsgf, sigt, sigs])
+            self.siga = siga
+            self.nusigf = nsgf
+            self.sigt = sigt
+            self.sigs = sigs
+            sigst = []
+            for s in sigs:
+                sigst.append(s[4])
+            for s in range(0, self.n_neutrons):
+                for g in range(s+1, self.n_neutrons):
+                    sigst[s] += sigs[g][4+g-s]
+            for s in range(4, self.n_neutrons):
+                for g in range(0, 4):
+                    sigst[s] += sigs[s-g-1][4-g-1]
+            self.sigst = sigst
+        elif self.id < 8000:
+            responses = []
+            for r in range(0, self.n_responses):
+                responses.append(data[:self.n_groups])
+                data[:self.n_groups] = []
+            self.xs.append(responses)
+                
+        else:
+            responses = []
+            for r in range(0, self.n_responses):
+                responses.append(data[:self.n_groups])
+                data[:self.n_groups] = []
+            self.xs.append(responses)
+            
 ## =========================================    
         
 ## =========================================       
@@ -49,24 +90,28 @@ class multigroup_library:
                 if title.split() == ['7', '7', '7', '7']:
                     break
                 nuclide = int(title.split()[3])
-                if nuclide < 7000:
-                    nuclide = int(title.split()[6])
+                ## if nuclide < 7000 and 'mixed' not in title:
+                ##     nuclide = int(title.split()[6])
                 if nuclide not in self.nuclides:
                     self.nuclides[nuclide]    = isotope(lines[start:finish+1])
                 else:
-                    self.nuclides[nuclide].add_legendre(lines[start:finish+1])
+                    self.nuclides[nuclide].read_data(lines[start:finish+1])
                 start = l
-                break
-    def get_mt(self, id, mts=[1]):
+                
+                
+    def get_mt(self, id, mts=[1], legendre=0):
         if not isinstance(mts, list):
             mts = [mts]
         sigmas = []
         for mt in mts:
-            sigmas.append(self.nuclides[id].xs[0][mt])
+            sigmas.append(self.nuclides[id].xs[legendre][mt])
         if len(sigmas) == 1:
-            return sigmas[0]
+            return sigmas
         else:
             return sigmas
+            
+    def sigt(self, id):
+        return self.nuclides[id].sigst
             
         
 ## =========================================   

@@ -1,0 +1,125 @@
+import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
+import numpy as np
+from math import *
+from reader import *
+
+try:
+    file_name = os.path.join( os.getcwd(), sys.argv[1] )
+except:
+    file_name = 'Bugle7T.bcd'
+    
+book = multigroup_library(file_name)
+energy = np.array([float(b.replace('\n','').replace('\r','')) for b in open('neutron_groups.dat').readlines()])
+n = len(energy) - 1
+## values = book.nuclides[4725].xs[0][0][:n]
+values = book.get_mt(1073, [0,1,2,3])
+
+for i in range(0, len(values)):
+    values[i] = values[i][:n] + [values[i][n]]
+    values[i] = np.array(values[i])
+
+## values[0] = [1.080116e6,
+## 6.003923e5,
+## 3.447559e6,
+## 4.934084e8,
+## 2.851141e6,
+## 2.932579e6,
+## 4.251389e8,
+## 3.741708e5,
+## 5.227357e6,
+## 3.014857e6,
+## 7.157252e6,
+## 3.373225e6, 
+## 3.373225e6,
+## 2.581760e5,
+## 2.913900e6,
+## 2.913900e6,
+## 6.681856e6,
+## 6.048203e6,
+## 4.624108e6,
+## 5.147719e8,
+## 4.506524e8,
+## 4.504483e8,
+## 5.179277e8,
+## 4.528692e8,
+## 3.891888e8,
+## 4.225616e8,
+## 4.112698e8,
+## 1.825793e6,
+## 5.057031e6,
+## 1.563112e6,
+## 1.125486e6,
+## 6.927050e5,
+## 2.628249e6,
+## 1.097414e6,
+## 1.239231e7,
+## 1.550799e7,
+## 9.769151e5,
+## 1.427373e7,
+## 1.071851e7,
+## 3.675357e6,
+## 6.138978e6,
+## 1.942611e6,
+## 1.285765e6,
+## 7.810771e5,
+## 7.848431e6,
+## 4.899414e6,
+## 4.899414e6]
+## 
+## values[0] = values[0] + [values[0][-1]]
+    
+    
+print energy
+print values[0]
+
+print len(book.nuclides)
+
+def get_ticks(mini,maxi):
+    if mini == 0:
+        mini = 1
+    print mini, maxi
+    mini = 10**floor(log10(mini))
+    maxi = 10**ceil(log10(maxi))
+    print "MIN/MAX",'%.6E'%mini, '%.6E'%maxi
+    a = [ np.linspace(mini,mini*10,10)[:-1] ]
+    while a[-1][0]*10 < maxi:
+        a.append(a[-1]*10)
+    a = np.array(a)
+    return np.append(a, a[-1][0]*10).flatten()
+
+# plot it!
+font = {'family' : 'normal',
+        'weight' : 'bold',
+        'size'   : 9}
+plt.rc('font', family='serif')
+fig = plt.figure(facecolor="white")
+ax = fig.add_subplot(111)
+ax.grid(which='both', linestyle="-", color="0.95")
+ax.set_axisbelow(True)
+
+for i in range(0, len(values)):
+    ax.step(energy, values[i], lw=2, label="data set "+repr(i), color='C'+repr(i), where='pre', linewidth=1)
+if (n>1):
+    ax.legend(loc='lower left')
+xlabel = ax.set_xlabel('energy ($eV$)')
+ax.set_ylabel('cross section ($cm^{-1}$)')
+try:
+    print sys.argv[2]
+    log = False
+except:
+    log = True
+if log:
+    ax.loglog()
+min, max = ax.yaxis.get_data_interval()
+min = np.min( values )
+print min
+ticks = get_ticks( min, max )
+##ax.set_yticks(ticks, minor=True)
+min, max = ax.xaxis.get_data_interval()
+ticks = get_ticks( min, max )
+##ax.set_xticks(ticks, minor=True)
+##ax.xaxis.set_ticks(np.exp(np.logspace(start, end, 4)))
+fig.set_size_inches(2*4.36,2*2.23)
+plt.savefig('test.png',dpi=300, bbox_extra_artists=[xlabel], bbox_inches='tight')
+plt.show()
