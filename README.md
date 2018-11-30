@@ -1,7 +1,7 @@
 # BUGLE-VITAMIN-reader
 I developed a python class that reads cross-sections libraries with the 'bcd' file extension with the BUGLE and VITAMIN shielding libraries in mind. The libraries can be loaded by a simple command:
 
-```
+```python
 from reader import *
 book = multigroup_library(file_name)
 ```
