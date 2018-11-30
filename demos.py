@@ -14,10 +14,13 @@ energy = [float(b.replace('\n','').replace('\r','')) for b in open('neutron_grou
 ## individual reactions from a single isotope
 ##   for example ... 
 ## 1137 u235, 2065 fe56, 2001 h1 (h20) downcomer, 95 c, 249 eu153
-iso = 249
+iso = 2001
 values = book.get_mt(iso, [0, 2])
 values.append(book.sigt(iso))
 titles = ['siga','sigt','sigs']
+## ========================================= 
+##            actualy plot it 
+xs_plot(energy, values, titles)
 ## ========================================= 
 
 ## ========================================= 
@@ -29,9 +32,6 @@ titles = []
 for i in isos:
     values += book.get_mt(i, [2])
     titles.append(book.nuclides[i].name)
-## ========================================= 
-
-
 ## ========================================= 
 ##            actualy plot it 
 xs_plot(energy, values, titles)
