@@ -1,7 +1,0 @@
-
-with open("Bugle7T_bigEndian", "rb") as f:
-    byte = f.read(1)
-    while byte != "":
-        # Do stuff with byte.
-        byte = f.read(1)
-        raw_input()
