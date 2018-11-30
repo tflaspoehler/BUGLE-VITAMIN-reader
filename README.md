@@ -6,3 +6,4 @@ The fine-group VITAMIN and coarse-group BUGLE libraries are multigroup shielding
 
 Updated versions are available through RSICC where they are developed by the transport group that develops SCALE. The MAVRIC shielding library is based on this with a higher energy group to go to 20MeV for neutrons (and maybe photons). The same libraries from MAVRIC are provided in ADVANTG.
 
+![alt text](test.png)
