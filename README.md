@@ -10,7 +10,7 @@ The fine-group VITAMIN and coarse-group BUGLE libraries are multigroup shielding
 
 I also have included a demo.py file that can be edited to plot different distributions from a loaded library like the following:
 
-![alt text](test.png)
+![alt text](SCALE/test.png)
 
 This is simply called with something similar:
 
