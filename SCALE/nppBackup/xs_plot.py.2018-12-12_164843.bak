@@ -49,7 +49,6 @@ def xs_plot(energy, values, titles=[]):
     
     
 def get_ticks(mini,maxi):
-    print mini, maxi
     if mini == 0:
         mini = 1
     mini = 10**floor(log10(mini))

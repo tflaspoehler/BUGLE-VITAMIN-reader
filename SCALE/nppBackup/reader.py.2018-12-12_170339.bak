@@ -104,10 +104,6 @@ class multigroup_library:
         for comment in comments[::-1]:
             lines[comment] = lines[comment][1:] + ' ' + lines[comment+1][1:]
             lines.pop(comment+1)
-            if 'ampx' in lines[comment+1]:
-                lines[comment] = lines[comment][1:] + ' ' + lines[comment+1][1:]
-                lines.pop(comment+1)
-                
         start = 0
         self.nuclides = {}
         for l in range(1, len(lines)):

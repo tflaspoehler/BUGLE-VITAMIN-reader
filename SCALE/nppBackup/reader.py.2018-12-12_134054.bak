@@ -13,7 +13,7 @@ class isotope:
         self.id = int(title.split()[-1])
         self.name = ' '.join(title.split()[5:])
         self.n_groups = int(title.split()[0])
-        self.n_neutrons = 200
+        self.n_neutrons = 27
         self.n_gammas = self.n_groups - self.n_neutrons
         self.n_responses = int(title.split()[1])
         self.xs = []
@@ -25,7 +25,7 @@ class isotope:
     def read_data(self, lines):
         data = []
         for line in lines[1:]:
-            values = line[:75].split()
+            values = line.split()[:-2]
             for v in range(0, len(values)):
                 if 'r' in values[v]:
                     fido = values[v].split('r')
@@ -53,28 +53,26 @@ class isotope:
                 if len(self.xs) < 1:
                     f.write(" ".join(["%+.4e" % d for d in data[0:self.n_responses]])+'\n')
                 # print data[0]
-                siga.append(data[4])
-                nsgf.append(data[2])
-                sigt.append(data[6])
+                siga.append(data[0])
+                nsgf.append(data[1])
+                sigt.append(data[2])
                 data[:6] = []
-                sigs.append([response for response in data[:self.n_responses-6]])
-                data[:self.n_responses-6] = []
+                sigs.append([response for response in data[:self.n_responses-7+1]])
+                data[:self.n_responses-7+1] = []
             self.xs.append([siga, nsgf, sigt, sigs])
             self.siga = siga
             self.nusigf = nsgf
             self.sigt = sigt
             self.sigs = sigs
             sigst = []
-            self.position = self.n_responses - 8 - self.n_groups + 1
-            print 'postion', self.position
             for s in sigs:
-                sigst.append(s[self.position])
+                sigst.append(s[4])
             for s in range(0, self.n_neutrons):
                 for g in range(s+1, self.n_neutrons):
-                    sigst[s] += sigs[g][self.position+g-s]
-            for s in range(self.position, self.n_neutrons):
-                for g in range(0, self.position):
-                    sigst[s] += sigs[s-g-1][self.position-g-1]
+                    sigst[s] += sigs[g][4+g-s]
+            for s in range(4, self.n_neutrons):
+                for g in range(0, 4):
+                    sigst[s] += sigs[s-g-1][4-g-1]
             self.sigst = sigst
             if len(self.xs) < 1:
                 f.close()
@@ -104,10 +102,6 @@ class multigroup_library:
         for comment in comments[::-1]:
             lines[comment] = lines[comment][1:] + ' ' + lines[comment+1][1:]
             lines.pop(comment+1)
-            if 'ampx' in lines[comment+1]:
-                lines[comment] = lines[comment][1:] + ' ' + lines[comment+1][1:]
-                lines.pop(comment+1)
-                
         start = 0
         self.nuclides = {}
         for l in range(1, len(lines)):
@@ -153,6 +147,11 @@ def convert_ascii_number(value):
     if value[0] == '-':
         sign = -1.0
         value = value[1:]
+    if ('.' not in value) and ('+' in value or '-' in value):
+        if '-' in value:
+            value = value.split('-')[0][0] + '.' + value.split('-')[0][1:] + '-' + value.split('-')[1]
+        elif '+' in value:
+            value = value.split('+')[0][0] + '.' + value.split('+')[0][1:] + '+' + value.split('+')[1]
     if '-' in value:
         return sign*float(value.split('-')[0])*(10.0**(-1.0*float(value.split('-')[1])))
     elif '+' in value:

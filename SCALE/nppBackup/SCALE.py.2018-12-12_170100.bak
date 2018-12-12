@@ -28,7 +28,7 @@ for value in values:
     for v in value:
         new[-1].append(abs(v))
 values = new        
-titles = ['h-1 (n, total)', 'li-6 (n, total)', 'u-235 (n, total)']
+titles = ['u-235 (n, total)','li-6 (n, total)']
 ## ========================================= 
 ##            actualy plot it 
 xs_plot(energy, values, titles)
