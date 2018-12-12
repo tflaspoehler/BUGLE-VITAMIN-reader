@@ -1,0 +1,24 @@
+from reader import *
+from xs_plot import *
+
+try:
+    file_name = os.path.join( os.getcwd(), sys.argv[1] )
+except:
+    file_name = 'broad.pun'
+    
+book = multigroup_library(file_name)
+energy = [float(b.replace('\n','').replace('\r','')) for b in open('neutron_groups.dat').readlines()]
+
+## ========================================= 
+##     this section shows how to plot 
+## individual reactions from a single isotope
+##   for example ... 
+## 1137 u235, 2065 fe56, 2001 h1 (h20) downcomer, 95 c, 249 eu153
+iso = 92235
+values = book.get_mt(iso, [0, 2])
+values.append(book.sigt(iso))
+titles = ['siga','sigt','sigs']
+## ========================================= 
+##            actualy plot it 
+xs_plot(energy, values, titles)
+## ========================================= 
