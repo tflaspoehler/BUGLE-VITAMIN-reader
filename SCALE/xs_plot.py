@@ -28,7 +28,7 @@ def xs_plot(energy, values, titles=[]):
     if (n>1):
         ax.legend(loc='lower left')
     xlabel = ax.set_xlabel('energy ($eV$)')
-    ax.set_ylabel('cross section ($cm^{-1}$)')
+    ax.set_ylabel('cross section ($b$)')
 
     ax.loglog()
     

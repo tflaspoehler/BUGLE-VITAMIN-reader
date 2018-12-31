@@ -19,6 +19,8 @@ iso = 1001
 values = book.get_mt(iso, [0])
 iso = 3006
 values.append(book.get_mt(iso, [0])[0])
+iso = 2065
+values.append(book.get_mt(iso, [0])[0])
 iso = 92235
 values.append(book.get_mt(iso, [0])[0])
 
@@ -28,7 +30,7 @@ for value in values:
     for v in value:
         new[-1].append(abs(v))
 values = new        
-titles = ['h-1 (n, total)', 'li-6 (n, total)', 'u-235 (n, total)']
+titles = ['h-1 (n, total)', 'li-6 (n, total)', 'fe-56 (n, total)', 'u-235 (n, total)']
 ## ========================================= 
 ##            actualy plot it 
 xs_plot(energy, values, titles)
